@@ -1,14 +1,39 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../provider/AuthProvider";
+import { updateProfile } from "firebase/auth";
 
 const Register = () => {
+  const { user, createUser } = useContext(AuthContext);
+
+  // Register
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const username = e.target.username.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    // console.log(email, password);
+    createUser(email, password)
+      .then((result) => {
+        // console.log(result.user);
+        updateProfile(result.user, {
+          displayName: username,
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
+  // console.log(createUser)
+
   return (
     <div>
       <div className="flex mx-auto mt-6 flex-col max-w-md rounded-md sm:p-10 bg-gray-900 dark:bg-gray-50 text-gray-100 dark:text-gray-800">
         <div className="mb-8 text-center">
           <h1 className="my-3 text-4xl font-bold">Register Account</h1>
         </div>
-        <form className="space-y-12">
+        <form onSubmit={handleRegister} className="space-y-12">
           <div className="space-y-4">
             <div>
               <label
@@ -21,7 +46,7 @@ const Register = () => {
                 type="username"
                 name="username"
                 id="username"
-                placeholder="leroy@jenkins.com"
+                placeholder="username"
                 className="w-full px-3 py-2 border rounded-md border-gray-700 dark:border-gray-300 bg-gray-900 dark:bg-gray-50 text-gray-100 dark:text-gray-800"
               />
             </div>
@@ -62,7 +87,7 @@ const Register = () => {
           <div className="space-y-2">
             <div>
               <button
-                type="button"
+                type="submit"
                 className="w-full px-8 py-3 font-semibold rounded-md bg-violet-400 dark:bg-violet-600 text-gray-900 dark:text-gray-50"
               >
                 Register
