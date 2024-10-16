@@ -1,18 +1,24 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import  { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
-import { EmailAuthCredential } from "firebase/auth/web-extension";
+
 
 const Login = () => {
   const { user,loginUser } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   // -------------------
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleLogin = (e) => {
     e.preventDefault();
     loginUser(email, password)
-      .then((result) => console.log(result.user))
+      .then((result) => {
+        console.log(result.user)
+        // e.target.reset();
+        setEmail("")
+        setPassword("")
+        navigate("/order")
+      })
       .catch((error) => console.log(error.message));
   };
   // console.log(email, password);
